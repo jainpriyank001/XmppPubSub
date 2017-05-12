@@ -25,6 +25,14 @@
 		<mongo-driver.version>3.0.3</mongo-driver.version>
 		<spring-mongodb.version>1.8.0.RELEASE</spring-mongodb.version>
 		<spring-data-commons.version>1.11.0.RELEASE</spring-data-commons.version>
+		<swagger.version>1.0.2</swagger.version>
+		
+		<swagger2markup.version>1.0.0</swagger2markup.version>
+		<asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
+
+        <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
+        <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
+        
 	</properties>
 
 	<dependencies>
@@ -174,7 +182,7 @@
 		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
-		    <version>r05</version>
+		    <version>15.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jivesoftware/smack -->
 		<dependency>
@@ -188,6 +196,30 @@
 		    <artifactId>smackx</artifactId>
 		    <version>3.2.1</version>
 		</dependency>
+		
+		<!-- Swagger Spring -->
+ 		<dependency>
+			<groupId>com.mangofactory</groupId>
+			<artifactId>swagger-springmvc</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+				<!-- http://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		 <dependency>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+            <version>${swagger2markup.version}</version>
+            <scope>test</scope>
+        </dependency>
 		
 	</dependencies>
 
@@ -222,6 +254,61 @@
 					<target>${java.version}</target>
 				</configuration>
         	</plugin>
+        	
+        	<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
+                        <io.springfox.staticdocs.snippetsOutputDir>${swagger.snippetOutput.dir}</io.springfox.staticdocs.snippetsOutputDir>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        	
+        	
+        	<!-- First, use the swagger2markup plugin to generate asciidoc -->
+            <plugin>
+                <groupId>io.github.swagger2markup</groupId>
+                <artifactId>swagger2markup-maven-plugin</artifactId>
+                <version>${swagger2markup.version}</version>
+                <dependencies>
+                   <dependency>
+					    <groupId>io.github.swagger2markup</groupId>
+					    <artifactId>swagger2markup-import-files-ext</artifactId>
+                        <version>${swagger2markup.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.github.swagger2markup</groupId>
+                        <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+                        <version>${swagger2markup.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <swaggerInput>${swagger.input}</swaggerInput>
+                    <outputDir>${generated.asciidoc.directory}</outputDir>
+                    <config>
+                        <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+                        <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
+
+                        <swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/docs/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>
+                        <swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/docs/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>
+                        <swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/docs/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>
+                        <swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/docs/asciidoc/extensions/security/</swagger2markup.extensions.dynamicSecurity.contentPath>
+
+                        <swagger2markup.extensions.springRestDocs.snippetBaseUri>${swagger.snippetOutput.dir}</swagger2markup.extensions.springRestDocs.snippetBaseUri>
+                        <swagger2markup.extensions.springRestDocs.defaultSnippets>true</swagger2markup.extensions.springRestDocs.defaultSnippets>
+                    </config>
+                </configuration>
+                <executions>
+                   <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>convertSwagger2markup</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         	
 		</plugins>
 	</build>

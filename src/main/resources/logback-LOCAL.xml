@@ -1,10 +1,10 @@
 <included>
-	<property name="PROJECT_ID" value="nb-zomato-connector"/>
+	<property name="PROJECT_ID" value="nb-xmpp-service"/>
    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_DIR:-logs}/${PROJECT_ID}.json</File>
         
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-        	<customFields>{"application":"nb-zomato-connector"}</customFields>
+        	<customFields>{"application":"nb-xmpp-service"}</customFields>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_DIR:-logs}/${PROJECT_ID}.%d{yyyy-MM-dd}.%i.json</fileNamePattern>

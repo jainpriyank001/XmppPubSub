@@ -18,15 +18,29 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class XmppManager {
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(XmppManager.class);
     
-    private static final int packetReplyTimeout = 5000; // millis
+    private static final int packetReplyTimeout = 1000; // millis
     
-    private String server = "chat1.iwanto.in";
-    private int port = 5222;
+    @Value("${xmpp.server}")
+    private String server;
+    
+    @Value("${xmpp.port}")
+    private int port;
+    
+    @Value("${admin.username}")
+    private String adminUser;
+    
+    @Value("${admin.password}")
+    private String adminPassword;
     
     private ConnectionConfiguration config;
     private XMPPConnection connection;
@@ -34,14 +48,9 @@ public class XmppManager {
     private ChatManager chatManager;
     private MessageListener messageListener;
     
-    /*public XmppManager(String server, int port) {
-        this.server = server;
-        this.port = port;
-    }*/
-    
-    public void init() throws XMPPException {
+    public void init() throws XMPPException, SaslException, IOException {
         
-        System.out.println(String.format("Initializing connection to server %1$s port %2$d", server, port));
+    	LOGGER.info("Initializing connection to server %1$s port %2$d", server, port);
 
         SmackConfiguration.setPacketReplyTimeout(packetReplyTimeout);
         
@@ -56,6 +65,7 @@ public class XmppManager {
         chatManager = connection.getChatManager();
         messageListener = new MyMessageListener();
         
+        createAdminAccount();
     }
     
     public void performLogin(String username, String password) throws XMPPException, SaslException, IOException {
@@ -81,27 +91,44 @@ public class XmppManager {
         }
     }
     
-    public void sendMessage(String message, String buddyJID) throws XMPPException {
-        System.out.println(String.format("Sending mesage '%1$s' to user %2$s", message, buddyJID));
+    public void sendMessage(String message, String buddyJID) throws XMPPException, SaslException, IOException {
+    	LOGGER.info("Sending mesage '%1$s' to user %2$s", message, buddyJID);
         if(chatManager == null || messageListener == null)
         	init();
         
-        Chat chat = chatManager.createChat(buddyJID, messageListener);
+        Chat chat = chatManager.createChat(buddyJID + "@" + server, messageListener);
         chat.sendMessage(message);
     }
     
     public void createEntry(String user, String name) throws Exception {
-        System.out.println(String.format("Creating entry for buddy '%1$s' with name %2$s", user, name));
+    	LOGGER.info("Creating entry for buddy '%1$s' with name %2$s", user, name);
         Roster roster = connection.getRoster();
         roster.createEntry(user, name, null);
     }
     
-    public void createAccount(String username, String password) throws XMPPException {
+    public void createAccount(String username, String password) throws XMPPException, SaslException, IOException {
     	if(connection == null)
     		init();
     	
     	AccountManager am = new AccountManager(connection);
     	am.createAccount(username, password);
+    }
+    
+    private void createAdminAccount() {
+    	AccountManager am = new AccountManager(connection);
+    	
+        try {
+        	
+			am.createAccount(adminUser, adminPassword);
+		} catch (XMPPException e) {
+			LOGGER.info("Admin account already exists");
+		}
+        
+        try {
+			performLogin(adminUser, adminPassword);
+		} catch (XMPPException | IOException e) {
+			LOGGER.info("Unable to login to admin account ", e);
+		}
     }
     
     class MyMessageListener implements MessageListener {
@@ -110,7 +137,7 @@ public class XmppManager {
         public void processMessage(Chat chat, Message message) {
             String from = message.getFrom();
             String body = message.getBody();
-            System.out.println(String.format("Received message '%1$s' from %2$s", body, from));
+            LOGGER.info("Received message '%1$s' from %2$s", body, from);
         }
     }
 }

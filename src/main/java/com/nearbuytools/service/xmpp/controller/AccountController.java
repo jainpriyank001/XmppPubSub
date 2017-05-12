@@ -3,7 +3,6 @@ package com.nearbuytools.service.xmpp.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +21,10 @@ import com.nearbuytools.service.xmpp.bean.ErrorResponse;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/account")
 public class AccountController {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
@@ -31,6 +32,9 @@ public class AccountController {
 	@Autowired
 	private XmppManager xmppManager;
 	
+	@ApiOperation(value="Registers an account on XMPP server for given username", 
+			notes="Service creates an user account on XMPP server with given username as JID"
+			)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public HttpEntity<Object> createAccount(@RequestBody(required=true) Account account,
 			HttpServletRequest request, HttpServletResponse httpResponse) {
@@ -39,7 +43,7 @@ public class AccountController {
 			//if(StringUtils.isBlank(account.getUserName()))
 				
 			xmppManager.createAccount(account.getUserName(), account.getPassword());
-			return ResponseUtil.sendResponse("account created successfully", headers, HttpStatus.OK);
+			return ResponseUtil.sendResponse("{ 'msg' : 'account created successfully' }", headers, HttpStatus.OK);
 			
 		} catch (XMPPException e) {
 			LOGGER.error("XMPPException while creating account for " + account.getUserName(), e);

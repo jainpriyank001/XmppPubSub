@@ -23,8 +23,10 @@ import com.nearbuytools.service.xmpp.bean.ErrorResponse;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
 public class ChatController {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(ChatController.class);
@@ -32,13 +34,16 @@ public class ChatController {
 	@Autowired
 	private XmppManager xmppManager;
 	
+	@ApiOperation(value="Send a message to the given JSD", 
+			notes="Service sends a chat message to the provided JID"
+			)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public HttpEntity<Object> sendMessage(@RequestBody(required=true) Chat chat,
 			HttpServletRequest request, HttpServletResponse httpResponse) {
 		HttpHeaders headers = new HttpHeaders();
 		try {
 			//if(StringUtils.isBlank(account.getUserName()))
-				
+			//xmppManager.performLogin(chat.getFrom(), chat.getFrom());
 			xmppManager.sendMessage(chat.getMessage(), chat.getTo());
 			return ResponseUtil.sendResponse("message sent", headers, HttpStatus.OK);
 			
