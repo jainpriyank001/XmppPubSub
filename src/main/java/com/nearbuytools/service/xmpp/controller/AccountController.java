@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nearbuytools.service.xmpp.bean.Account;
+import com.nearbuytools.service.xmpp.bean.AccountResponse;
 import com.nearbuytools.service.xmpp.bean.ErrorResponse;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
+import com.nearbuytools.service.xmpp.service.AccountService;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +32,7 @@ public class AccountController {
 	private static Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 	
 	@Autowired
-	private XmppManager xmppManager;
+	private AccountService accountService;
 	
 	@ApiOperation(value="Registers an account on XMPP server for given username", 
 			notes="Service creates an user account on XMPP server with given username as JID"
@@ -40,10 +42,9 @@ public class AccountController {
 			HttpServletRequest request, HttpServletResponse httpResponse) {
 		HttpHeaders headers = new HttpHeaders();
 		try {
-			//if(StringUtils.isBlank(account.getUserName()))
 				
-			xmppManager.createAccount(account.getUserName(), account.getPassword());
-			return ResponseUtil.sendResponse("{ 'msg' : 'account created successfully' }", headers, HttpStatus.OK);
+			AccountResponse res = accountService.createAccount(account);
+			return ResponseUtil.sendResponse(res, headers, HttpStatus.OK);
 			
 		} catch (XMPPException e) {
 			LOGGER.error("XMPPException while creating account for " + account.getUserName(), e);

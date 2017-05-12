@@ -11,6 +11,7 @@ public class Account implements Serializable {
 	
 	private String userName;
 	private String password;
+	private boolean encryptPassword;
 	
 	public String getUserName() {
 		return userName;
@@ -23,5 +24,11 @@ public class Account implements Serializable {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public boolean isEncryptPassword() {
+		return encryptPassword;
+	}
+	public void setEncryptPassword(boolean encryptPassword) {
+		this.encryptPassword = encryptPassword;
 	}
 }
