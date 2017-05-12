@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nearbuytools.service.xmpp.bean.Account;
 import com.nearbuytools.service.xmpp.bean.Chat;
+import com.nearbuytools.service.xmpp.bean.ChatResponse;
 import com.nearbuytools.service.xmpp.bean.ErrorResponse;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
@@ -45,7 +46,9 @@ public class ChatController {
 			//if(StringUtils.isBlank(account.getUserName()))
 			//xmppManager.performLogin(chat.getFrom(), chat.getFrom());
 			xmppManager.sendMessage(chat.getMessage(), chat.getTo());
-			return ResponseUtil.sendResponse("message sent", headers, HttpStatus.OK);
+			ChatResponse res = new ChatResponse();
+			res.setMsg("message sent");
+			return ResponseUtil.sendResponse(res, headers, HttpStatus.OK);
 			
 		} catch (XMPPException e) {
 			LOGGER.error("XMPPException while sending messgae to " + chat.getTo(), e);
