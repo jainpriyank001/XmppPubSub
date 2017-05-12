@@ -50,7 +50,7 @@ public class XmppManager {
     
     public void init() throws XMPPException, SaslException, IOException {
         
-    	LOGGER.info("Initializing connection to server %1$s port %2$d", server, port);
+    	LOGGER.info("Initializing connection to server {} port {}", server, port);
 
         SmackConfiguration.setPacketReplyTimeout(packetReplyTimeout);
         
@@ -92,7 +92,7 @@ public class XmppManager {
     }
     
     public void sendMessage(String message, String buddyJID) throws XMPPException, SaslException, IOException {
-    	LOGGER.info("Sending mesage '%1$s' to user %2$s", message, buddyJID);
+    	LOGGER.info("Sending mesage '{}' to user {}", message, buddyJID);
         if(chatManager == null || messageListener == null)
         	init();
         
@@ -101,7 +101,7 @@ public class XmppManager {
     }
     
     public void createEntry(String user, String name) throws Exception {
-    	LOGGER.info("Creating entry for buddy '%1$s' with name %2$s", user, name);
+    	LOGGER.info("Creating entry for buddy '{}' with name {}", user, name);
         Roster roster = connection.getRoster();
         roster.createEntry(user, name, null);
     }
@@ -137,7 +137,7 @@ public class XmppManager {
         public void processMessage(Chat chat, Message message) {
             String from = message.getFrom();
             String body = message.getBody();
-            LOGGER.info("Received message '%1$s' from %2$s", body, from);
+            LOGGER.info("Received message '{}' from {}", body, from);
         }
     }
 }
