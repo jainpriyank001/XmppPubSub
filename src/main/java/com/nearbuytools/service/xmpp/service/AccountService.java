@@ -20,6 +20,8 @@ public class AccountService {
 	@Value("${xmpp.server}")
     private String server;
 	
+	private static final int ACCOUNT_CONFLICT_CODE = 409;
+	
 	@Autowired
 	private XmppManager xmppManager;
 	
@@ -30,8 +32,12 @@ public class AccountService {
 			account.setPassword(EncryptionUtil.encrypt(account.getPassword()));
 			res.setPassword(account.getPassword());
 		}
-		System.out.println(account.getPassword());
-		xmppManager.createAccount(account.getUserName(), account.getPassword());
+		try {
+			xmppManager.createAccount(account.getUserName(), account.getPassword());
+		} catch(XMPPException e) {
+			if(e.getXMPPError().getCode() == ACCOUNT_CONFLICT_CODE && !account.isOverride())
+				throw e;
+		}
 		res.setJid(account.getUserName() + "@" + server);
 		return res;
 	}	

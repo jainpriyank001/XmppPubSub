@@ -51,7 +51,7 @@ public class AccountController {
             return ResponseUtil.sendResponse(new ErrorResponse(601, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
         	LOGGER.error("Exception while creating account for " + account.getUserName(), e);
-            return ResponseUtil.sendResponse(new ErrorResponse(602, "Exception while creating account"), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.sendResponse(new ErrorResponse(602, "Exception while creating account: " + e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
 }

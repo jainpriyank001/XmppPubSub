@@ -12,6 +12,7 @@ public class Account implements Serializable {
 	private String userName;
 	private String password;
 	private boolean encryptPassword;
+	private boolean override;
 	
 	public String getUserName() {
 		return userName;
@@ -30,5 +31,11 @@ public class Account implements Serializable {
 	}
 	public void setEncryptPassword(boolean encryptPassword) {
 		this.encryptPassword = encryptPassword;
+	}
+	public boolean isOverride() {
+		return override;
+	}
+	public void setOverride(boolean override) {
+		this.override = override;
 	}
 }
