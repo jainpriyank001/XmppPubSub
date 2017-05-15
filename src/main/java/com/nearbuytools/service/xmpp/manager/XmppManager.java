@@ -114,7 +114,7 @@ public class XmppManager {
     	am.createAccount(username, password);
     }
     
-    private void createAdminAccount() {
+    private void createAdminAccount() throws XMPPException, IOException {
     	AccountManager am = new AccountManager(connection);
     	
         try {
@@ -128,6 +128,7 @@ public class XmppManager {
 			performLogin(adminUser, adminPassword);
 		} catch (XMPPException | IOException e) {
 			LOGGER.info("Unable to login to admin account ", e);
+			throw e;
 		}
     }
     
