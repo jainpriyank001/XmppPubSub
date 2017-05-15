@@ -11,6 +11,13 @@ public class ChatResponse implements Serializable {
 
 	private String msg;
 
+	public ChatResponse() {
+		super();
+	}
+	public ChatResponse(String msg) {
+		super();
+		this.msg = msg;
+	}
 	public String getMsg() {
 		return msg;
 	}

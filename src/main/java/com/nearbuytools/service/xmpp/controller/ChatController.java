@@ -21,8 +21,10 @@ import com.nearbuytools.service.xmpp.bean.Account;
 import com.nearbuytools.service.xmpp.bean.Chat;
 import com.nearbuytools.service.xmpp.bean.ChatResponse;
 import com.nearbuytools.service.xmpp.bean.ErrorResponse;
+import com.nearbuytools.service.xmpp.exception.DataValidationException;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
+import com.nearbuytools.service.xmpp.validator.ChatValidator;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -35,27 +37,27 @@ public class ChatController {
 	@Autowired
 	private XmppManager xmppManager;
 	
+	@Autowired
+	private ChatValidator chatValidator;
+	
 	@ApiOperation(value="Send a message to the given JSD", 
 			notes="Service sends a chat message to the provided JID"
 			)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public HttpEntity<Object> sendMessage(@RequestBody(required=true) Chat chat,
-			HttpServletRequest request, HttpServletResponse httpResponse) {
+	public HttpEntity<Object> sendMessage(@RequestBody(required=true) Chat chat) {
 		HttpHeaders headers = new HttpHeaders();
 		try {
-			//if(StringUtils.isBlank(account.getUserName()))
-			//xmppManager.performLogin(chat.getFrom(), chat.getFrom());
+			chatValidator.validate(chat);
 			xmppManager.sendMessage(chat.getMessage(), chat.getTo());
-			ChatResponse res = new ChatResponse();
-			res.setMsg("message sent");
-			return ResponseUtil.sendResponse(res, headers, HttpStatus.OK);
-			
+			return ResponseUtil.sendResponse(new ChatResponse("message sent"), headers, HttpStatus.OK);
 		} catch (XMPPException e) {
 			LOGGER.error("XMPPException while sending messgae to " + chat.getTo(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(701, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
+        } catch (DataValidationException e) {
+            return ResponseUtil.sendResponse(new ErrorResponse(703, e.getMessage()), headers, HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
         	LOGGER.error("Exception while sending messgae to " + chat.getTo(), e);
-            return ResponseUtil.sendResponse(new ErrorResponse(702, "Exception while sending message"), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.sendResponse(new ErrorResponse(702, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
 }

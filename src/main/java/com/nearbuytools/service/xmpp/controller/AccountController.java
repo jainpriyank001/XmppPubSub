@@ -1,8 +1,5 @@
 package com.nearbuytools.service.xmpp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nearbuytools.service.xmpp.bean.Account;
 import com.nearbuytools.service.xmpp.bean.AccountResponse;
 import com.nearbuytools.service.xmpp.bean.ErrorResponse;
-import com.nearbuytools.service.xmpp.manager.XmppManager;
+import com.nearbuytools.service.xmpp.exception.DataValidationException;
 import com.nearbuytools.service.xmpp.service.AccountService;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
+import com.nearbuytools.service.xmpp.validator.AccountValidator;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -34,24 +32,28 @@ public class AccountController {
 	@Autowired
 	private AccountService accountService;
 	
+	@Autowired
+	private AccountValidator accountValidator;
+	
 	@ApiOperation(value="Registers an account on XMPP server for given username", 
 			notes="Service creates an user account on XMPP server with given username as JID"
 			)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public HttpEntity<Object> createAccount(@RequestBody(required=true) Account account,
-			HttpServletRequest request, HttpServletResponse httpResponse) {
+	public HttpEntity<Object> createAccount(@RequestBody(required=true) Account account) {
 		HttpHeaders headers = new HttpHeaders();
 		try {
-				
+			accountValidator.validate(account);
 			AccountResponse res = accountService.createAccount(account);
 			return ResponseUtil.sendResponse(res, headers, HttpStatus.OK);
 			
 		} catch (XMPPException e) {
 			LOGGER.error("XMPPException while creating account for " + account.getUserName(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(601, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (DataValidationException e) {
+            return ResponseUtil.sendResponse(new ErrorResponse(603, e.getMessage()), headers, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
         	LOGGER.error("Exception while creating account for " + account.getUserName(), e);
-            return ResponseUtil.sendResponse(new ErrorResponse(602, "Exception while creating account: " + e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.sendResponse(new ErrorResponse(602, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
 }
