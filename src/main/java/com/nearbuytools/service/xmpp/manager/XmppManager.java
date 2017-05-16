@@ -8,6 +8,7 @@ import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SmackConfiguration;
@@ -55,9 +56,9 @@ public class XmppManager {
         SmackConfiguration.setPacketReplyTimeout(packetReplyTimeout);
         
         config = new ConnectionConfiguration(server, port);
-        //config.setSASLAuthenticationEnabled(true);
+        config.setSASLAuthenticationEnabled(true);
         //config.setCompressionEnabled(false);
-        //config.setSecurityMode(SecurityMode.disabled);
+        config.setSecurityMode(SecurityMode.enabled);
         
         connection = new XMPPConnection(config);
         connection.connect();
@@ -75,7 +76,8 @@ public class XmppManager {
         }
     }
 
-    public void setStatus(boolean available, String status) {
+    public void setStatus(boolean available, String status) throws SaslException, XMPPException, IOException {
+        connect();
         
         Presence.Type type = available? Type.available: Type.unavailable;
         Presence presence = new Presence(type);
@@ -91,10 +93,17 @@ public class XmppManager {
         }
     }
     
+    public void connect() throws XMPPException, SaslException, IOException  {
+    	if(connection == null)
+    		init();
+    	
+        if (!connection.isConnected())
+            connection.connect();
+    }
+    
     public void sendMessage(String message, String buddyJID) throws XMPPException, SaslException, IOException {
     	LOGGER.info("Sending mesage '{}' to user {}", message, buddyJID);
-        if(chatManager == null || messageListener == null)
-        	init();
+    	connect();
         
         Chat chat = chatManager.createChat(buddyJID + "@" + server, messageListener);
         chat.sendMessage(message);
@@ -102,13 +111,15 @@ public class XmppManager {
     
     public void createEntry(String user, String name) throws Exception {
     	LOGGER.info("Creating entry for buddy '{}' with name {}", user, name);
+    	connect();
+    	
         Roster roster = connection.getRoster();
         roster.createEntry(user, name, null);
     }
     
     public void createAccount(String username, String password) throws XMPPException, SaslException, IOException {
-    	if(connection == null)
-    		init();
+    	LOGGER.info("Creating account for '{}'", username);
+    	connect();
     	
     	AccountManager am = new AccountManager(connection);
     	am.createAccount(username, password);
@@ -116,9 +127,7 @@ public class XmppManager {
     
     private void createAdminAccount() throws XMPPException, IOException {
     	AccountManager am = new AccountManager(connection);
-    	
         try {
-        	
 			am.createAccount(adminUser, adminPassword);
 		} catch (XMPPException e) {
 			LOGGER.info("Admin account already exists");
