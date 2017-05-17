@@ -35,9 +35,10 @@ public class AccountService {
 		try {
 			xmppManager.createAccount(account.getUserName(), account.getPassword());
 		} catch(XMPPException e) {
-			if(e != null && e.getXMPPError() != null)
+			if(e != null && e.getXMPPError() != null) {
 				if(e.getXMPPError().getCode() == ACCOUNT_CONFLICT_CODE && !account.isOverride())
 					throw e;
+			}
 			else
 				throw e;
 		}
