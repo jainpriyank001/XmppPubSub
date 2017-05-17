@@ -29,7 +29,7 @@ public class XmppManager {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(XmppManager.class);
     
-    private static final int packetReplyTimeout = 1000; // millis
+    private static final int packetReplyTimeout = 5000; // millis
     
     @Value("${xmpp.server}")
     private String server;
@@ -99,7 +99,9 @@ public class XmppManager {
     	
         if (!connection.isConnected()) {
             connection.connect();
-            performLogin(adminUser, adminPassword);
+            
+            if(!connection.isAuthenticated())
+            	performLogin(adminUser, adminPassword);
         }
     }
     
