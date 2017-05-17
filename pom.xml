@@ -22,8 +22,6 @@
 		<java.version>1.8</java.version>
 		<google.gson.version>2.3.1</google.gson.version>
 		<spring.boot.version>1.2.5.RELEASE</spring.boot.version>
-		<mongo-driver.version>3.0.3</mongo-driver.version>
-		<spring-mongodb.version>1.8.0.RELEASE</spring-mongodb.version>
 		<spring-data-commons.version>1.11.0.RELEASE</spring-data-commons.version>
 		<swagger.version>1.0.2</swagger.version>
 		
@@ -62,31 +60,6 @@
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-test</artifactId>
 		</dependency>
-
-		<!-- MongoDB Java driver -->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-			<version>${mongo-driver.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
-			<version>${spring-mongodb.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.mongodb</groupId>
-					<artifactId>mongo-java-driver</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-commons</artifactId>
-			<version>${spring-data-commons.version}</version>
-		</dependency>		
 
 		<dependency>
 			<groupId>junit</groupId>
