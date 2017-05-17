@@ -97,8 +97,10 @@ public class XmppManager {
     	if(connection == null)
     		init();
     	
-        if (!connection.isConnected())
+        if (!connection.isConnected()) {
             connection.connect();
+            performLogin(adminUser, adminPassword);
+        }
     }
     
     public void sendMessage(String message, String buddyJID) throws XMPPException, SaslException, IOException {
