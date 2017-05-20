@@ -94,14 +94,16 @@ public class XmppManager {
     }
     
     public void connect() throws XMPPException, SaslException, IOException  {
-    	if(connection == null)
+    	if(connection == null) {
     		init();
+    	}
     	
         if (!connection.isConnected()) {
             connection.connect();
-            
-            if(!connection.isAuthenticated())
-            	performLogin(adminUser, adminPassword);
+        }
+        
+        if(!connection.isAuthenticated()) {
+        	performLogin(adminUser, adminPassword);
         }
     }
     
