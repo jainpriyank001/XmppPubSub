@@ -29,7 +29,7 @@ public class XmppManager {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(XmppManager.class);
     
-    private static final int packetReplyTimeout = 10000; // millis
+    private static final int packetReplyTimeout = 30000; // millis
     
     @Value("${xmpp.server}")
     private String server;
