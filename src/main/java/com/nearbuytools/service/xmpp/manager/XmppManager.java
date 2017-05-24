@@ -8,6 +8,7 @@ import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
@@ -67,6 +68,8 @@ public class XmppManager {
         messageListener = new MyMessageListener();
         
         createAdminAccount();
+        
+        connection.addConnectionListener(new MyConnectionListener());
     }
     
     public void performLogin(String username, String password) throws XMPPException, SaslException, IOException {
@@ -155,5 +158,33 @@ public class XmppManager {
             String body = message.getBody();
             LOGGER.info("Received message '{}' from {}", body, from);
         }
+    }
+    
+    class MyConnectionListener implements ConnectionListener {
+
+		@Override
+		public void connectionClosed() {
+			LOGGER.info("Connection {} closed", connection.getConnectionID());
+		}
+
+		@Override
+		public void connectionClosedOnError(Exception e) {
+			LOGGER.info("Connection {} closed with an error: ", connection.getConnectionID(), e.getMessage());
+		}
+
+		@Override
+		public void reconnectingIn(int seconds) {
+			LOGGER.info("Reconnecting for connection {} in {} seconds", connection.getConnectionID(), seconds);
+		}
+
+		@Override
+		public void reconnectionSuccessful() {
+			LOGGER.info("Reconnection for connection {} successful", connection.getConnectionID());
+		}
+
+		@Override
+		public void reconnectionFailed(Exception e) {
+			LOGGER.info("Reconnection for connection {} failed, error: {}", connection.getConnectionID(), e.getMessage());
+		}
     }
 }
