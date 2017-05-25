@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import com.nearbuytools.service.xmpp.bean.Account;
 import com.nearbuytools.service.xmpp.bean.AccountResponse;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
+import com.nearbuytools.service.xmpp.manager.XmppManagerBabbler;
 import com.nearbuytools.service.xmpp.util.EncryptionUtil;
+
+import rocks.xmpp.core.XmppException;
 
 @Component
 public class AccountService {
@@ -27,9 +30,9 @@ public class AccountService {
 	private static Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
 
 	@Autowired
-	private XmppManager xmppManager;
+	private XmppManagerBabbler xmppManager;
 
-	public AccountResponse createAccount(Account account) throws XMPPException, SaslException, IOException {
+	public AccountResponse createAccount(Account account) throws XmppException, SaslException, IOException {
 		// if(StringUtils.isBlank(account.getUserName()))
 		AccountResponse res = new AccountResponse();
 		if (account.isEncryptPassword()) {
@@ -39,14 +42,15 @@ public class AccountService {
 		
 		try {
 			xmppManager.createAccount(account.getUserName(), account.getPassword());
-		} catch (XMPPException e) {
-			if (e != null && e.getXMPPError() != null) {
+		} catch (XmppException e) {
+			/*if (e != null && e.getXMPPError() != null) {
 				if (e.getXMPPError().getCode() == ACCOUNT_CONFLICT_CODE && !account.isOverride()) {
 					throw e;
 				}
 			} else {
 				throw e;
-			}
+			}*/
+			throw e;
 		}
 
 		/*new Thread(new Runnable() {

@@ -22,6 +22,7 @@ import com.nearbuytools.service.xmpp.util.ResponseUtil;
 import com.nearbuytools.service.xmpp.validator.AccountValidator;
 
 import io.swagger.annotations.ApiOperation;
+import rocks.xmpp.core.XmppException;
 
 @RestController
 @RequestMapping("/api/account")
@@ -46,7 +47,7 @@ public class AccountController {
 			AccountResponse res = accountService.createAccount(account);
 			return ResponseUtil.sendResponse(res, headers, HttpStatus.OK);
 			
-		} catch (XMPPException e) {
+		} catch (XmppException e) {
 			LOGGER.error("XMPPException while creating account for " + account.getUserName(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(601, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (DataValidationException e) {

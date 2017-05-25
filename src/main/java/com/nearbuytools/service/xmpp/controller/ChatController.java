@@ -23,10 +23,12 @@ import com.nearbuytools.service.xmpp.bean.ChatResponse;
 import com.nearbuytools.service.xmpp.bean.ErrorResponse;
 import com.nearbuytools.service.xmpp.exception.DataValidationException;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
+import com.nearbuytools.service.xmpp.manager.XmppManagerBabbler;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
 import com.nearbuytools.service.xmpp.validator.ChatValidator;
 
 import io.swagger.annotations.ApiOperation;
+import rocks.xmpp.core.XmppException;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -35,7 +37,7 @@ public class ChatController {
 	private static Logger LOGGER = LoggerFactory.getLogger(ChatController.class);
 	
 	@Autowired
-	private XmppManager xmppManager;
+	private XmppManagerBabbler xmppManager;
 	
 	@Autowired
 	private ChatValidator chatValidator;
@@ -50,7 +52,7 @@ public class ChatController {
 			chatValidator.validate(chat);
 			xmppManager.sendMessage(chat.getMessage(), chat.getTo());
 			return ResponseUtil.sendResponse(new ChatResponse("message sent"), headers, HttpStatus.OK);
-		} catch (XMPPException e) {
+		} catch (XmppException e) {
 			LOGGER.error("XMPPException while sending messgae to " + chat.getTo(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(701, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (DataValidationException e) {
