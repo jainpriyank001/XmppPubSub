@@ -2,6 +2,7 @@ package com.nearbuytools.service.xmpp.manager;
 
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 //import org.jivesoftware.smack.packet.Message;
 import org.slf4j.Logger;
@@ -9,11 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.nearbuytools.service.xmpp.debugger.LogDebugger;
+
 import rocks.xmpp.addr.Jid;
 import rocks.xmpp.core.XmppException;
 import rocks.xmpp.core.session.ConnectionEvent;
 import rocks.xmpp.core.session.TcpConnectionConfiguration;
 import rocks.xmpp.core.session.XmppClient;
+import rocks.xmpp.core.session.XmppSessionConfiguration;
 import rocks.xmpp.core.stanza.model.Message;
 import rocks.xmpp.extensions.register.RegistrationManager;
 import rocks.xmpp.extensions.register.model.Registration;
@@ -38,10 +42,15 @@ public class XmppManagerBabbler {
 	@Value("${admin.password}")
 	private String adminPassword;
 
+	private XmppSessionConfiguration sessionConfiguration;
 	private TcpConnectionConfiguration tcpConfiguration;
 	private XmppClient xmppClient;
 	
 	public void init() throws XmppException {
+		
+		sessionConfiguration = XmppSessionConfiguration.builder()
+			    .debugger(LogDebugger.class)
+			    .build();
 		
 		tcpConfiguration = TcpConnectionConfiguration.builder()
 			    .hostname(server)
@@ -51,7 +60,7 @@ public class XmppManagerBabbler {
 			    .keepAliveInterval(30)
 			    .build();
 		
-		xmppClient = XmppClient.create(server, tcpConfiguration);
+		xmppClient = XmppClient.create(server, sessionConfiguration, tcpConfiguration);
 
 		
 		LOGGER.info("Initializing connection to server {} port {}", server, port);
@@ -135,8 +144,9 @@ public class XmppManagerBabbler {
 		LOGGER.info("Creating entry for buddy '{}' with name {}", user, name);
 		connect();
 
-		Roster roster = connection.getRoster();
-		roster.createEntry(user, name, null);
+		RosterManager rosterManager = xmppClient.getManager(RosterManager.class);
+		PresenceManager presenceManager = xmppClient.getManager(PresenceManager.class);
+		rosterManager.getContact(Jid.of("" + "@" + server));
 	}*/
 
 	public void createAccount(String username, String password) throws XmppException {
@@ -145,21 +155,20 @@ public class XmppManagerBabbler {
 
 		RegistrationManager registrationManager = xmppClient.getManager(RegistrationManager.class);
         registrationManager.setEnabled(true);
-
+        
         Registration registration = Registration.builder()
                 .username(username)
                 .password(password)
                 .build();
         AsyncResult<Void> result = registrationManager.register(registration);
-        /*while(!result.isDone()) {
-        	try {
-        		LOGGER.info("Waiting for account creation.");
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+        /*result.exceptionally(new Function<Throwable, Void>() {
+
+			@Override
+			public Void apply(Throwable t) {
+				LOGGER.error(t.getMessage(), t);
+				return null;
 			}
-        }*/
+		});*/
 	}
 
 	private void createAdminAccount() throws XmppException {
