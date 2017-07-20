@@ -35,6 +35,51 @@
 	</properties>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Smack -->
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack-core</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack-extensions</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack-tcp</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jxmpp</groupId>
+			<artifactId>jxmpp-jid</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack-im</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack-java7</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+		
+	
 		<!-- Spring Boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -61,11 +106,12 @@
 		    <artifactId>spring-test</artifactId>
 		</dependency>
 
-		<dependency>
+<!-- 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
+		
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
@@ -158,20 +204,29 @@
 		    <artifactId>guava</artifactId>
 		    <version>15.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jivesoftware/smack -->
+		
+		<!-- 
+		
 		<dependency>
 		    <groupId>jivesoftware</groupId>
 		    <artifactId>smack</artifactId>
 		    <version>3.2.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jivesoftware/smackx -->
+		https://mvnrepository.com/artifact/jivesoftware/smackx
 		<dependency>
 		    <groupId>jivesoftware</groupId>
 		    <artifactId>smackx</artifactId>
 		    <version>3.2.1</version>
 		</dependency>
-		
-		<!-- Swagger Spring -->
+		 <dependency>
+        	<groupId>org.igniterealtime.smack</groupId>
+        	<artifactId>smack-extensions</artifactId>
+        	<version>4.1.7</version>
+        </dependency>
+       
+		 -->
+		 
+		 <!-- Swagger Spring -->
  		<dependency>
 			<groupId>com.mangofactory</groupId>
 			<artifactId>swagger-springmvc</artifactId>
@@ -188,36 +243,31 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.5.0</version>
 		</dependency>
-		 <dependency>
-            <groupId>io.github.swagger2markup</groupId>
-            <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-            <version>${swagger2markup.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-staticdocs</artifactId>
-            <version>2.4.0</version>
-        </dependency>
+		
+		<dependency>
+			<groupId>io.github.swagger2markup</groupId>
+			<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+			<version>${swagger2markup.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-        <dependency>
-        	<groupId>org.igniterealtime.smack</groupId>
-        	<artifactId>smack-extensions</artifactId>
-        	<version>4.1.7</version>
-        </dependency>
-        
-        <dependency>
-    <groupId>rocks.xmpp</groupId>
-    <artifactId>xmpp-core-client</artifactId>
-    <version>0.7.4</version>
-</dependency>
-<dependency>
-    <groupId>rocks.xmpp</groupId>
-    <artifactId>xmpp-extensions-client</artifactId>
-    <version>0.7.4</version>
-</dependency>
+	<dependency>
+		<groupId>io.springfox</groupId>
+		<artifactId>springfox-staticdocs</artifactId>
+		<version>2.4.0</version>
+	</dependency>
 
+
+	<dependency>
+		<groupId>rocks.xmpp</groupId>
+		<artifactId>xmpp-core-client</artifactId>
+		<version>0.7.4</version>
+	</dependency>
+	<dependency>
+		<groupId>rocks.xmpp</groupId>
+		<artifactId>xmpp-extensions-client</artifactId>
+		<version>0.7.4</version>
+	</dependency>
 
 	</dependencies>
 

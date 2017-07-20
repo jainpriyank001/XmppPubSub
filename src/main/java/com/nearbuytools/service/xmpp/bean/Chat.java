@@ -2,8 +2,7 @@ package com.nearbuytools.service.xmpp.bean;
 
 import java.io.Serializable;
 
-public class Chat implements Serializable {
-	
+public class Chat implements Serializable {	
 	/**
 	 * 
 	 */

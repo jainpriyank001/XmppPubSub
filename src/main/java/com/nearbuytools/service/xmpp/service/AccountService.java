@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.security.sasl.SaslException;
 
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import com.nearbuytools.service.xmpp.bean.Account;
 import com.nearbuytools.service.xmpp.bean.AccountResponse;
+import com.nearbuytools.service.xmpp.bean.PubsubAccount;
+import com.nearbuytools.service.xmpp.manager.XmppConnectionManager;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.manager.XmppManagerBabbler;
 import com.nearbuytools.service.xmpp.util.EncryptionUtil;
@@ -30,50 +33,23 @@ public class AccountService {
 	private static Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
 
 	@Autowired
-	private XmppManagerBabbler xmppManager;
+	private XmppConnectionManager xmppManager;
 
-	public AccountResponse createAccount(Account account) throws XmppException, SaslException, IOException {
-		// if(StringUtils.isBlank(account.getUserName()))
+	public AccountResponse createAccount(PubsubAccount account) throws XmppException, SaslException, IOException, XMPPException, SmackException, InterruptedException {
+		
 		AccountResponse res = new AccountResponse();
+		
 		if (account.isEncryptPassword()) {
 			account.setPassword(EncryptionUtil.encrypt(account.getPassword()));
 			res.setPassword(account.getPassword());
 		}
 		
 		try {
-			xmppManager.createAccount(account.getUserName(), account.getPassword());
+			xmppManager.createAccount(account.getUsername(), account.getPassword());
 		} catch (XmppException e) {
-			/*if (e != null && e.getXMPPError() != null) {
-				if (e.getXMPPError().getCode() == ACCOUNT_CONFLICT_CODE && !account.isOverride()) {
-					throw e;
-				}
-			} else {
-				throw e;
-			}*/
 			throw e;
 		}
-
-		/*new Thread(new Runnable() {
-			public void run() {
-				try {
-					xmppManager.createAccount(account.getUserName(), account.getPassword());
-				} catch (XMPPException e) {
-					if (e != null && e.getXMPPError() != null) {
-						if (e.getXMPPError().getCode() == ACCOUNT_CONFLICT_CODE && !account.isOverride()) {
-							LOGGER.error("XMPPException while creating account for user " + account.getUserName() + ":" + e.getMessage(), e);
-						}
-					} else {
-						LOGGER.error("Error while creating account for user " + account.getUserName() + ":" + e.getMessage(), e);
-					}
-				} catch (SaslException e) {
-					LOGGER.error("SaslException while creating account for user " + account.getUserName() + ":" + e.getMessage(), e);
-				} catch (IOException e) {
-					LOGGER.error("IOException while creating account for user " + account.getUserName() + ":" + e.getMessage(), e);
-				}
-			}
-		}).start();*/
-
-		res.setJid(account.getUserName() + "@" + server);
+		res.setJid(account.getUsername() + "@" + server);
 		return res;
 	}
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PingController {
-	
+
 	@RequestMapping(value="/ping",method= RequestMethod.GET)
 	public @ResponseBody String ping(){
 		return "pong";

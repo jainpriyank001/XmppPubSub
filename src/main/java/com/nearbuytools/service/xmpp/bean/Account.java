@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Account implements Serializable {
 	
 	/**
-	 * 
+	 * Using PubsubAccount.java instead of Account.java for Pubsub Implementation
 	 */
 	private static final long serialVersionUID = -1703220920863574215L;
 	

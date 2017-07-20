@@ -1,33 +1,33 @@
 package com.nearbuytools.service.xmpp.manager;
-
-import java.io.IOException;
-
-import javax.security.sasl.SaslException;
-
-import org.jivesoftware.smack.AccountManager;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.SmackConfiguration;
-//import org.jivesoftware.smack.SmackException;
-//import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.Presence.Type;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-@Component
+//
+//import java.io.IOException;
+//
+//import javax.security.sasl.SaslException;
+//
+//import org.jivesoftware.smack.AccountManager;
+//import org.jivesoftware.smack.Chat;
+//import org.jivesoftware.smack.ChatManager;
+//import org.jivesoftware.smack.ConnectionConfiguration;
+//import org.jivesoftware.smack.ConnectionListener;
+//import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
+//import org.jivesoftware.smack.MessageListener;
+//import org.jivesoftware.smack.Roster;
+//import org.jivesoftware.smack.SmackConfiguration;
+////import org.jivesoftware.smack.SmackException;
+////import org.jivesoftware.smack.SmackException.NotConnectedException;
+//import org.jivesoftware.smack.XMPPConnection;
+//import org.jivesoftware.smack.XMPPException;
+//import org.jivesoftware.smack.packet.Message;
+//import org.jivesoftware.smack.packet.Presence;
+//import org.jivesoftware.smack.packet.Presence.Type;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.stereotype.Component;
+//
+//@Component
 public class XmppManager {
-	
+/*	s
 	private static Logger LOGGER = LoggerFactory.getLogger(XmppManager.class);
     
     private static final int packetReplyTimeout = 30000; // millis
@@ -186,5 +186,5 @@ public class XmppManager {
 		public void reconnectionFailed(Exception e) {
 			LOGGER.info("Reconnection for connection {} failed, error: {}", connection.getConnectionID(), e.getMessage());
 		}
-    }
+    }*/
 }

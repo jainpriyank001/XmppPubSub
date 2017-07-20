@@ -1,7 +1,6 @@
 package com.nearbuytools.service.xmpp.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.XMPPException;
@@ -25,11 +24,19 @@ import com.nearbuytools.service.xmpp.exception.DataValidationException;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.manager.XmppManagerBabbler;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
+simport com.nearbuytools.service.xmpp.validator.ChatValidator;
+
+
+import com.nearbuytools.service.xmpp.bean.Chat;
+import com.nearbuytools.service.xmpp.manager.XmppManagerBabbler;
+import com.nearbuytools.service.xmpp.util.ResponseUtil;
 import com.nearbuytools.service.xmpp.validator.ChatValidator;
 
 import io.swagger.annotations.ApiOperation;
 import rocks.xmpp.core.XmppException;
 
+
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
@@ -62,4 +69,5 @@ public class ChatController {
             return ResponseUtil.sendResponse(new ErrorResponse(702, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
-}
+
+	}
