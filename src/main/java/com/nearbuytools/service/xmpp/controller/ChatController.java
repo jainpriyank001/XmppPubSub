@@ -24,7 +24,7 @@ import com.nearbuytools.service.xmpp.exception.DataValidationException;
 import com.nearbuytools.service.xmpp.manager.XmppManager;
 import com.nearbuytools.service.xmpp.manager.XmppManagerBabbler;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
-simport com.nearbuytools.service.xmpp.validator.ChatValidator;
+import com.nearbuytools.service.xmpp.validator.ChatValidator;
 
 
 import com.nearbuytools.service.xmpp.bean.Chat;
@@ -56,15 +56,13 @@ public class ChatController {
 	public HttpEntity<Object> sendMessage(@RequestBody(required=true) Chat chat) {
 		HttpHeaders headers = new HttpHeaders();
 		try {
-			chatValidator.validate(chat);
+			//chatValidator.validate(chat);
 			xmppManager.sendMessage(chat.getMessage(), chat.getTo());
 			return ResponseUtil.sendResponse(new ChatResponse("message sent"), headers, HttpStatus.OK);
 		} catch (XmppException e) {
 			LOGGER.error("XMPPException while sending messgae to " + chat.getTo(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(701, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (DataValidationException e) {
-            return ResponseUtil.sendResponse(new ErrorResponse(703, e.getMessage()), headers, HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
         	LOGGER.error("Exception while sending messgae to " + chat.getTo(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(702, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }

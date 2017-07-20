@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nearbuytools.service.xmpp.bean.ChatResponse;
+import com.nearbuytools.service.xmpp.bean.ErrorResponse;
 import com.nearbuytools.service.xmpp.manager.XmppConnectionManager;
+import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
 
 
