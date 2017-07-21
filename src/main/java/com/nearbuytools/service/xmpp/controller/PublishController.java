@@ -23,7 +23,7 @@ import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
 
 @RestController
-@RequestMapping(value="api/publish")
+@RequestMapping(value="/api/publish")
 public class PublishController {
 	
 		private static Logger LOGGER=LoggerFactory.getLogger(PublishController.class);

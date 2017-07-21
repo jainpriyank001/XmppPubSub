@@ -21,7 +21,7 @@ import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
 
 @RestController
-@RequestMapping(value="api/createnode")
+@RequestMapping(value="/api/createnode")
 
 public class CreateNodeController {
 

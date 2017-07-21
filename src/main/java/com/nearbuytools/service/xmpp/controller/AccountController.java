@@ -43,6 +43,7 @@ public class AccountController {
 	@ApiOperation(value="Registers an account on XMPP server for given username", 
 			notes="Service creates an user account on XMPP server with given username as JID"
 			)
+	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public HttpEntity<Object> createAccount(@RequestBody(required=true) PubsubAccount account) {
 		HttpHeaders headers = new HttpHeaders();
@@ -51,12 +52,15 @@ public class AccountController {
 			AccountResponse res = accountService.createAccount(account);
 			return ResponseUtil.sendResponse(res, headers, HttpStatus.OK);
 			
-		} catch (XmppException e) {
+		} 
+		catch (XmppException e) {
 			LOGGER.error("XMPPException while creating account for " + account.getUsername(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(601, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (DataValidationException e) {
+        } 
+		catch (DataValidationException e) {
             return ResponseUtil.sendResponse(new ErrorResponse(603, e.getMessage()), headers, HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
+        } 
+		catch (Exception e) {
         	LOGGER.error("Exception while creating account for " + account.getUsername(), e);
             return ResponseUtil.sendResponse(new ErrorResponse(602, e.getMessage()), headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }

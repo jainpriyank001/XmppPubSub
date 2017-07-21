@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nearbuytools.service.xmpp.manager.XmppConnectionManager;
 
 @RestController
-@RequestMapping(value="api/readnode")
+@RequestMapping(value="/api/readnode")
 
 public class ReadNodeController {
 	
@@ -32,7 +32,7 @@ public class ReadNodeController {
 	
 	@ApiOperation(value="To read payloads on a node")
 	
-	@RequestMapping(path="{nodeName}",method=RequestMethod.GET)
+	@RequestMapping(path="/{nodeName}",method=RequestMethod.GET)
 	public @ResponseBody List<Item> readNode(@PathVariable String nodeName) throws InterruptedException, XMPPException, IOException, SmackException{
 		
 		List<Item> values=xmppManager.readItemsOnNode(nodeName);

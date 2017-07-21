@@ -19,7 +19,7 @@ import com.nearbuytools.service.xmpp.manager.XmppConnectionManager;
 import com.nearbuytools.service.xmpp.util.ResponseUtil;
 
 @RestController
-@RequestMapping(value="api/sub")
+@RequestMapping(value="/api/sub")
 public class SubscribeController {
 	
 		private static Logger LOGGER=LoggerFactory.getLogger(SubscribeController.class);
@@ -31,7 +31,7 @@ public class SubscribeController {
 				notes="User subscribes/unsubscibes to a node using JID"
 				)
 		
-		@RequestMapping(path="subscribe/{nodeName}/{jid}",method=RequestMethod.GET)
+		@RequestMapping(path="/subscribe/{nodeName}/{jid}",method=RequestMethod.GET)
 		public HttpEntity<Object> subscribe(@PathVariable("nodeName") String nodeName, @PathVariable("jid") String jid){
 			HttpHeaders headers=new HttpHeaders();
 			try{
@@ -46,7 +46,7 @@ public class SubscribeController {
 			
 		}
 		
-		@RequestMapping(path="unsubscribe/{nodeName}/{jid}",method=RequestMethod.GET)
+		@RequestMapping(path="/unsubscribe/{nodeName}/{jid}",method=RequestMethod.GET)
 		public HttpEntity<Object> unsubscribe(@PathVariable("nodeName") String nodeName, @PathVariable("jid") String jid){
 			HttpHeaders headers=new HttpHeaders();
 			try{
